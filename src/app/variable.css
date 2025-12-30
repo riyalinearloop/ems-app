@@ -1,0 +1,45 @@
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+ 
+  
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-border-strong: var(--border-strong);
+  --color-border-input: var(--border-input);
+
+  --color-border-input: var(--border-input);
+  --color-input: var(--input);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* PRIMARY */
+  --primary: #0d76e7;
+  --primary-hover: #0966ca;
+  --primary-foreground: #ffffff;
+
+  /* BORDERS */
+  --border: #D0D7DD;
+  --border-soft: #E4E8EA;
+  --border-strong: #B8C1C7;
+  --border-input: #D0D7DD;
+
+  /* INPUT / RING */
+  --input: #D0D7DD;
+  --ring: #8BA0A7;
+}
+
+@layer base {
+  /* * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  } */
+}

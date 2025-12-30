@@ -1,0 +1,280 @@
+import type {
+  ActivityItem,
+  DepotSectionData,
+  InventoryItem,
+  LowStockItem,
+} from "../types";
+
+export const headquartersInventoryItems: InventoryItem[] = [
+  {
+    name: "Morphine",
+    current: 85,
+    min: 10,
+    max: 100,
+    lot: "MOR2024A",
+    expiry: "2025-06-15",
+  },
+  {
+    name: "Hydromorphone",
+    current: 32,
+    min: 5,
+    max: 50,
+    lot: "HYD2024B",
+    expiry: "2025-07-20",
+  },
+  {
+    name: "Fentanyl",
+    current: 28,
+    min: 8,
+    max: 40,
+    lot: "FEN2024C",
+    expiry: "2025-05-10",
+  },
+  {
+    name: "Ketamine",
+    current: 45,
+    min: 12,
+    max: 60,
+    lot: "KET2024D",
+    expiry: "2025-08-30",
+  },
+  {
+    name: "Midazolam",
+    current: 38,
+    min: 7,
+    max: 45,
+    lot: "MID2024E",
+    expiry: "2025-09-15",
+  },
+];
+
+export const depotSections: DepotSectionData[] = [
+  {
+    title: "Depot 1",
+    code: "D1",
+    items: [
+      {
+        name: "Morphine",
+        current: 3,
+        min: 5,
+        max: 25,
+        lot: "MOR2024A",
+        expiry: "2025-06-15",
+      },
+      {
+        name: "Hydromorphone",
+        current: 8,
+        min: 3,
+        max: 15,
+        lot: "HYD2024B",
+        expiry: "2025-07-20",
+      },
+      {
+        name: "Fentanyl",
+        current: 12,
+        min: 4,
+        max: 20,
+        lot: "FEN2024C",
+        expiry: "2025-05-10",
+      },
+      {
+        name: "Ketamine",
+        current: 2,
+        min: 6,
+        max: 30,
+        lot: "KET2024D",
+        expiry: "2025-08-30",
+      },
+      {
+        name: "Midazolam",
+        current: 15,
+        min: 4,
+        max: 22,
+        lot: "MID2024E",
+        expiry: "2025-09-15",
+      },
+    ],
+  },
+  {
+    title: "Depot 2",
+    code: "D2",
+    items: [
+      {
+        name: "Morphine",
+        current: 18,
+        min: 5,
+        max: 25,
+        lot: "MOR2024A",
+        expiry: "2025-06-15",
+      },
+      {
+        name: "Hydromorphone",
+        current: 11,
+        min: 3,
+        max: 15,
+        lot: "HYD2024B",
+        expiry: "2025-07-20",
+      },
+      {
+        name: "Fentanyl",
+        current: 6,
+        min: 4,
+        max: 20,
+        lot: "FEN2024C",
+        expiry: "2025-05-10",
+      },
+      {
+        name: "Ketamine",
+        current: 22,
+        min: 6,
+        max: 30,
+        lot: "KET2024D",
+        expiry: "2025-08-30",
+      },
+      {
+        name: "Midazolam",
+        current: 19,
+        min: 4,
+        max: 22,
+        lot: "MID2024E",
+        expiry: "2025-09-15",
+      },
+    ],
+  },
+  {
+    title: "Depot 3",
+    code: "D3",
+    items: [
+      {
+        name: "Morphine",
+        current: 14,
+        min: 5,
+        max: 25,
+        lot: "MOR2024A",
+        expiry: "2025-06-15",
+      },
+      {
+        name: "Hydromorphone",
+        current: 7,
+        min: 3,
+        max: 15,
+        lot: "HYD2024B",
+        expiry: "2025-07-20",
+      },
+      {
+        name: "Fentanyl",
+        current: 1,
+        min: 4,
+        max: 20,
+        lot: "FEN2024C",
+        expiry: "2025-05-10",
+      },
+      {
+        name: "Ketamine",
+        current: 25,
+        min: 6,
+        max: 30,
+        lot: "KET2024D",
+        expiry: "2025-08-30",
+      },
+      {
+        name: "Midazolam",
+        current: 13,
+        min: 4,
+        max: 22,
+        lot: "MID2024E",
+        expiry: "2025-09-15",
+      },
+    ],
+  },
+  {
+    title: "Depot 4",
+    code: "D4",
+    items: [
+      {
+        name: "Morphine",
+        current: 21,
+        min: 5,
+        max: 25,
+        lot: "MOR2024A",
+        expiry: "2025-06-15",
+      },
+      {
+        name: "Hydromorphone",
+        current: 4,
+        min: 3,
+        max: 15,
+        lot: "HYD2024B",
+        expiry: "2025-07-20",
+      },
+      {
+        name: "Fentanyl",
+        current: 16,
+        min: 4,
+        max: 20,
+        lot: "FEN2024C",
+        expiry: "2025-05-10",
+      },
+      {
+        name: "Ketamine",
+        current: 8,
+        min: 6,
+        max: 30,
+        lot: "KET2024D",
+        expiry: "2025-08-30",
+      },
+      {
+        name: "Midazolam",
+        current: 26,
+        min: 4,
+        max: 22,
+        lot: "MID2024E",
+        expiry: "2025-09-15",
+      },
+    ],
+  },
+];
+
+export const lowStockItems: LowStockItem[] = [
+  {
+    name: "Morphine",
+    location: "Depot 1",
+    current: 3,
+    min: 5,
+  },
+  {
+    name: "Ketamine",
+    location: "Depot 1",
+    current: 2,
+    min: 6,
+  },
+  {
+    name: "Fentanyl",
+    location: "Depot 3",
+    current: 1,
+    min: 4,
+  },
+];
+
+export const activityItems: ActivityItem[] = [
+  {
+    color: "blue",
+    title: "Transfer completed",
+    description: "HQ → D1 (Morphine: 10, Fentanyl: 5)",
+    ago: "2h ago",
+  },
+  {
+    color: "green",
+    title: "Pouch signed out",
+    description: "P003 to Sarah Connor",
+    ago: "4h ago",
+  },
+  {
+    color: "yellow",
+    title: "Order ETA updated",
+    description: "ORD001 - Expected Jan 30",
+    ago: "6h ago",
+  },
+];
+
+
