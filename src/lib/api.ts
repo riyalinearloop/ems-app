@@ -64,8 +64,9 @@ export const fetch = async (
     });
     return response.data;
   } catch (e: any) {
-    if (e?.response && e?.response?.data && e?.response?.data?.message) {
-      throw new Error(e.response.data.message || "Bad response from server");
+    if (e?.response && e?.response?.data && e?.response?.data?.error?.message) {
+      console.log("e.response.data.error.message", e.response.data.error.message);
+      throw new Error(e?.response?.data?.error?.message || "Bad response from server");
     } else {
       throw new Error(e?.message || "Bad response from server");
     }

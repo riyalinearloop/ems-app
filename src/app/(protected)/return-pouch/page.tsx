@@ -1,13 +1,14 @@
 import { redirect } from "next/navigation";
 import { getServerAuthCookie } from "@/lib/auth.server";
-import ReportsContainer from "@/components/containers/reports/reportsContainer";
+import ReturnPouchContainer from "@/components/containers/returnPouch/returnPouchContainer";
 
-export default async function ReportsPage() {
+export default async function ReturnPouchPage() {
   const auth = await getServerAuthCookie();
 
   if (!auth) {
     redirect("/login");
   }
 
-  return <ReportsContainer />;
+  return <ReturnPouchContainer />;
 }
+

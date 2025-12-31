@@ -8,9 +8,11 @@ import {
   Calendar,
   ChevronLeft,
   FileText,
-  LayoutDashboard,
   Package,
-  ShoppingCart,
+  ClipboardList,
+  Search,
+  ArrowDownCircle,
+  ArrowUpCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,6 +21,7 @@ import React from "react";
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  userType?: "logistic" | "paramedic";
 }
 
 interface NavItem {
@@ -26,23 +29,25 @@ interface NavItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: number;
+  userTypes?: ("logistic" | "paramedic")[];
 }
 
-const navItems: NavItem[] = [
+// Logistic user navigation items
+const logisticNavItems: NavItem[] = [
   {
     label: "Dashboard",
     href: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Package,
   },
   {
     label: "Inventory Transfer",
     href: "/inventory-transfer",
-    icon: Package,
+    icon: FileText,
   },
   {
     label: "Order Management",
     href: "/order-management",
-    icon: ShoppingCart,
+    icon: ClipboardList,
   },
   {
     label: "Notifications",
@@ -53,7 +58,7 @@ const navItems: NavItem[] = [
   {
     label: "Reports",
     href: "/reports",
-    icon: FileText,
+    icon: Search,
   },
   {
     label: "Incidents",
@@ -72,8 +77,46 @@ const navItems: NavItem[] = [
   },
 ];
 
-export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
+// Paramedic user navigation items
+const paramedicNavItems: NavItem[] = [
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+    icon: Package,
+  },
+  {
+    label: "Withdraw Pouch",
+    href: "/withdraw-pouch",
+    icon: ArrowDownCircle,
+  },
+  {
+    label: "Return Pouch",
+    href: "/return-pouch",
+    icon: ArrowUpCircle,
+  },
+  {
+    label: "Notifications",
+    href: "/notifications",
+    icon: Bell,
+    badge: 3,
+  },
+  {
+    label: "Pouch History",
+    href: "/pouch-history",
+    icon: Calendar,
+  },
+];
+
+export const Sidebar = ({ collapsed, onToggle, userType = "logistic" }: SidebarProps) => {
   const pathname = usePathname();
+
+  // Get navigation items based on user type
+  const navItems = React.useMemo(() => {
+    if (userType === "paramedic") {
+      return paramedicNavItems;
+    }
+    return logisticNavItems;
+  }, [userType]);
 
   return (
     <aside
@@ -91,7 +134,9 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
             </div>
             <div>
               <div className="font-bold text-sm text-gray-900">HealthO EMS</div>
-              <div className="text-xs text-gray-500">LOGISTICS PORTAL</div>
+              <div className="text-xs text-gray-500">
+                {userType === "paramedic" ? "PARAMEDIC PORTAL" : "LOGISTICS PORTAL"}
+              </div>
             </div>
           </div>
         )}
@@ -114,8 +159,8 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 overflow-y-auto py-4">
-        <ul className="space-y-1 px-2">
+      <nav className="flex-1 overflow-y-auto p-4">
+        <ul className="space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -125,22 +170,19 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                    "hover:bg-blue-50 hover:text-blue-600",
-                    isActive ? "bg-blue-50 text-blue-600" : "text-gray-700"
+                    "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all font-medium",
+                    isActive
+                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                    collapsed && "justify-center"
                   )}
                 >
-                  <Icon
-                    className={cn(
-                      "w-5 h-5 flex-shrink-0",
-                      collapsed && "mx-auto"
-                    )}
-                  />
+                  <Icon className="w-5 h-5" />
                   {!collapsed && (
                     <>
-                      <span className="flex-1">{item.label}</span>
+                      <span>{item.label}</span>
                       {item.badge && (
-                        <span className="bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                        <span className="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
                           {item.badge}
                         </span>
                       )}

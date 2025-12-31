@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isAuthenticated } from "@/lib/auth.server";
+import { isAuthenticated, getServerAuthCookie } from "@/lib/auth.server";
 import { MainLayout } from "@/components/layouts/MainLayout/MainLayout";
 
 export default async function ProtectedLayout({
@@ -11,5 +11,16 @@ export default async function ProtectedLayout({
     redirect("/login");
   }
 
-  return <MainLayout>{children}</MainLayout>;
+  const authCookie = await getServerAuthCookie();
+
+  const userType =
+    authCookie?.user?.permissionGroup?.type ||
+    authCookie?.user?.userType ||
+    "logistic";
+
+  return (
+    <MainLayout userType={userType as "logistic" | "paramedic"}>
+      {children}
+    </MainLayout>
+  );
 }

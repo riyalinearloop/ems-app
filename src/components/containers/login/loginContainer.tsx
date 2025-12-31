@@ -94,6 +94,7 @@ const LoginContainer = () => {
       const payload: LoginPayload = {
         email: data.email,
         password: data.password,
+        isNarcoticsPortal: true
       };
 
       // Add reCAPTCHA token if available

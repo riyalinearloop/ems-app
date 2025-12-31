@@ -5,6 +5,12 @@ export interface LoginPayload {
   password: string;
   gReCaptchaToken?: string;
   otpExtensionToken?: string;
+  isNarcoticsPortal?: boolean;
+}
+
+export interface PermissionGroup {
+  type: "logistic" | "paramedic";
+  [key: string]: any;
 }
 
 export interface LoginSuccessResponse {
@@ -20,8 +26,10 @@ export interface LoginSuccessResponse {
     phone?: string;
     userType: string;
     orgId: string;
+    permissionGroup?: PermissionGroup;
     [key: string]: any;
   };
+  permissionGroup?: PermissionGroup;
   otpReference?: string;
   userHasOtpExt?: {
     otpExtensionToken: string;

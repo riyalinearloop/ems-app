@@ -1,9 +1,9 @@
-import type {
+import {
   ActivityItem,
   DepotSectionData,
   InventoryItem,
   LowStockItem,
-} from "../types";
+} from "./type";
 
 export const headquartersInventoryItems: InventoryItem[] = [
   {
@@ -276,5 +276,3 @@ export const activityItems: ActivityItem[] = [
     ago: "6h ago",
   },
 ];
-
-

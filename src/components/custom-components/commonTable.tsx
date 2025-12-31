@@ -122,58 +122,56 @@ export function CommonTable({
   }, []);
 
   return (
-    <div className="relative w-full border rounded-lg overflow-hidden">
+    <div className="relative w-full">
       {/* Scroll Area */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className={`relative ${
-          scrollable ? "overflow-x-auto" : "overflow-hidden"
-        }`}
+        className="overflow-x-auto"
       >
-        {/* Shadows */}
-        {scrollable && showLeftShadow && (
-          <div className="absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-black/20 to-transparent z-10" />
-        )}
-        {scrollable && showRightShadow && (
-          <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-black/20 to-transparent z-10" />
-        )}
-
         {/* Table */}
-        <Table className="min-w-[900px]">
-          <TableHeader>
-            <TableRow>
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
               {columns.map((col, index) => (
-                <TableHead key={index}>{col.title}</TableHead>
+                <th
+                  key={index}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  {col.title}
+                </th>
               ))}
-            </TableRow>
-          </TableHeader>
+            </tr>
+          </thead>
 
-          <TableBody>
+          <tbody className="bg-white divide-y divide-gray-200">
             {data.length === 0 ? (
-              <TableRow>
-                <TableCell
+              <tr>
+                <td
                   colSpan={columns.length}
-                  className="text-center py-6"
+                  className="px-6 py-4 text-center text-sm text-gray-500"
                 >
                   No records found
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ) : (
               data.map((row, rowIndex) => (
-                <TableRow key={rowIndex}>
+                <tr key={rowIndex} className="hover:bg-gray-50">
                   {columns.map((column, colIndex) => (
-                    <TableCell key={colIndex}>
+                    <td
+                      key={colIndex}
+                      className="px-6 py-4 whitespace-nowrap text-sm"
+                    >
                       {column.render
                         ? column.render(row[column.dataIndex], row)
                         : renderCellValue(row[column.dataIndex])}
-                    </TableCell>
+                    </td>
                   ))}
-                </TableRow>
+                </tr>
               ))
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
 
       {/* Pagination */}

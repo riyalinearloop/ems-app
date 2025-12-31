@@ -9,5 +9,8 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  return <DashboardContainer />;
+  const userType =
+    auth?.user?.permissionGroup?.type || auth?.user?.userType || "logistic";
+
+  return <DashboardContainer userType={userType as "logistic" | "paramedic"} />;
 }

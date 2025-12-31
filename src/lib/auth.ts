@@ -7,6 +7,10 @@ export interface AuthPayload {
     email: string;
     phone?: string;
     userType: string;
+    permissionGroup?: {
+      type: "logistic" | "paramedic";
+      [key: string]: any;
+    };
   };
   accessToken: string;
   session: any;

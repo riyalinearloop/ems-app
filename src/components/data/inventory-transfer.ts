@@ -62,4 +62,27 @@ export const RECENT_TRANSFERS: TransferRow[] = [
   },
 ];
 
+export interface Medication {
+  name: string;
+  available?: number;
+  current?: number;
+}
+
+// Sample medication data - in real app, this would come from API based on selected location
+export const SAMPLE_AVAILABLE_MEDICATIONS: Medication[] = [
+  { name: "Morphine", available: 85 },
+  { name: "Hydromorphone", available: 32 },
+  { name: "Fentanyl", available: 28 },
+  { name: "Ketamine", available: 45 },
+  { name: "Midazolam", available: 38 },
+];
+
+export const SAMPLE_CURRENT_INVENTORY: Medication[] = [
+  { name: "Morphine", current: 3 },
+  { name: "Hydromorphone", current: 8 },
+  { name: "Fentanyl", current: 12 },
+  { name: "Ketamine", current: 2 },
+  { name: "Midazolam", current: 15 },
+];
+
 

@@ -10,6 +10,7 @@ export interface PouchStats {
 
 export interface MedicationInventory {
   name: string;
+  abbreviation?: string; // e.g., "Mor", "Fen", "Mid" - optional for backward compatibility
   quantity: number;
 }
 
@@ -33,53 +34,53 @@ export const POUCH_STATS: PouchStats = {
 export const POUCHES: Pouch[] = [
   {
     id: "p001",
-    pouchNumber: "P001",
+    pouchNumber: "Pouch P001",
     status: "Signed Out",
     assignedTo: "John Mitchell",
-    timeAgo: "309d ago",
+    timeAgo: "338d ago",
     medications: [
-      { name: "Morphine", quantity: 2 },
-      { name: "Fentanyl", quantity: 1 },
-      { name: "Midazolam", quantity: 1 },
+      { name: "Morphine", abbreviation: "Mor", quantity: 2 },
+      { name: "Fentanyl", abbreviation: "Fen", quantity: 1 },
+      { name: "Midazolam", abbreviation: "Mid", quantity: 1 },
     ],
     fullness: "Full",
   },
   {
     id: "p002",
-    pouchNumber: "P002",
+    pouchNumber: "Pouch P002",
     status: "Signed In",
     assignedTo: null,
-    timeAgo: "309d ago",
+    timeAgo: "338d ago",
     medications: [
-      { name: "Morphine", quantity: 2 },
-      { name: "Hydromorphone", quantity: 1 },
-      { name: "Ketamine", quantity: 2 },
+      { name: "Morphine", abbreviation: "Mor", quantity: 2 },
+      { name: "Hydromorphone", abbreviation: "Hyd", quantity: 1 },
+      { name: "Ketamine", abbreviation: "Ket", quantity: 2 },
     ],
     fullness: "Full",
   },
   {
     id: "p003",
-    pouchNumber: "P003",
+    pouchNumber: "Pouch P003",
     status: "Signed Out",
     assignedTo: "Sarah Connor",
-    timeAgo: "309d ago",
+    timeAgo: "338d ago",
     medications: [
-      { name: "Fentanyl", quantity: 2 },
-      { name: "Midazolam", quantity: 2 },
-      { name: "Ketamine", quantity: 1 },
+      { name: "Fentanyl", abbreviation: "Fen", quantity: 2 },
+      { name: "Midazolam", abbreviation: "Mid", quantity: 2 },
+      { name: "Ketamine", abbreviation: "Ket", quantity: 1 },
     ],
     fullness: "Not Full",
   },
   {
     id: "p004",
-    pouchNumber: "P004",
+    pouchNumber: "Pouch P004",
     status: "Signed In",
     assignedTo: null,
-    timeAgo: "309d ago",
+    timeAgo: "338d ago",
     medications: [
-      { name: "Morphine", quantity: 1 },
-      { name: "Hydromorphone", quantity: 2 },
-      { name: "Fentanyl", quantity: 1 },
+      { name: "Morphine", abbreviation: "Mor", quantity: 1 },
+      { name: "Hydromorphone", abbreviation: "Hyd", quantity: 2 },
+      { name: "Fentanyl", abbreviation: "Fen", quantity: 1 },
     ],
     fullness: "Full",
   },

@@ -8,8 +8,12 @@ import {
   TrendingUp,
   ArrowDown,
   ArrowUp,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Calendar,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CommonButton from "@/components/custom-components/commonButton";
 
 interface MetricCardProps {
   title: string;
@@ -76,7 +80,19 @@ const InventoryCard = ({
   </Card>
 );
 
-export const DashboardScene = () => {
+interface DashboardSceneProps {
+  userType?: string;
+}
+
+export const DashboardScene = ({ userType }: DashboardSceneProps) => {
+  const isParamedic = userType === "paramedic";
+
+  // Paramedic Dashboard Content
+  if (isParamedic) {
+    return <ParamedicDashboard />;
+  }
+
+  // Logistic Dashboard Content
   const medications = [
     { name: "Morphine", quantity: 85, min: 10, max: 100, isLowStock: false },
     {
@@ -127,9 +143,9 @@ export const DashboardScene = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <MetricCard
           title="Total Medications"
           value="479"
@@ -156,23 +172,23 @@ export const DashboardScene = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Inventory Overview */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 md:space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">
               Inventory Overview
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-xs md:text-sm text-gray-600 mb-4">
               Real-time inventory levels across all locations
             </p>
 
             {/* Headquarters */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">
+            <div className="mb-4 md:mb-6">
+              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3">
                 Headquarters (HQ)
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
                 {medications.map((med) => (
                   <InventoryCard key={med.name} {...med} />
                 ))}
@@ -181,10 +197,10 @@ export const DashboardScene = () => {
 
             {/* Depot 1 */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">
+              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3">
                 Depot 1 (D1)
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
                 {depot1Medications.map((med) => (
                   <InventoryCard key={med.name} {...med} />
                 ))}
@@ -221,6 +237,144 @@ export const DashboardScene = () => {
             </CardContent>
           </Card>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Paramedic Dashboard Component
+const ParamedicDashboard = () => {
+  const myPouches = [
+    {
+      pouchNumber: "P001",
+      status: "In Use",
+      withdrawnDate: "2025-01-26 08:00:00",
+      medications: [
+        { name: "Morphine", quantity: 2, used: 1 },
+        { name: "Fentanyl", quantity: 1, used: 0 },
+        { name: "Midazolam", quantity: 1, used: 1 },
+      ],
+    },
+    {
+      pouchNumber: "P003",
+      status: "In Use",
+      withdrawnDate: "2025-01-26 10:00:00",
+      medications: [
+        { name: "Fentanyl", quantity: 2, used: 0 },
+        { name: "Midazolam", quantity: 2, used: 1 },
+        { name: "Ketamine", quantity: 1, used: 0 },
+      ],
+    },
+  ];
+
+  return (
+    <div className="space-y-4 md:space-y-6">
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <MetricCard
+          title="Active Pouches"
+          value={myPouches.length.toString()}
+          icon={Package}
+          iconColor="bg-blue-600"
+        />
+        <MetricCard
+          title="Available Pouches"
+          value="2"
+          icon={Activity}
+          iconColor="bg-green-600"
+        />
+        <MetricCard
+          title="Pending Returns"
+          value="1"
+          icon={AlertTriangle}
+          iconColor="bg-yellow-600"
+        />
+        <MetricCard
+          title="Notifications"
+          value="3"
+          icon={TrendingUp}
+          iconColor="bg-purple-600"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        {/* My Active Pouches */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="w-5 h-5 text-blue-600" />
+              My Active Pouches
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {myPouches.map((pouch) => (
+              <Card key={pouch.pouchNumber} className="bg-gray-50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-gray-900">
+                      {pouch.pouchNumber}
+                    </h4>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
+                      {pouch.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 mb-3">
+                    Withdrawn: {pouch.withdrawnDate}
+                  </p>
+                  <div className="space-y-1">
+                    {pouch.medications.map((med, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between text-sm"
+                      >
+                        <span className="text-gray-700">{med.name}</span>
+                        <span className="text-gray-600">
+                          {med.used}/{med.quantity} used
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-green-600" />
+              Quick Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <CommonButton
+              variant="primary"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/withdraw-pouch")}
+            >
+              <ArrowDownCircle className="w-4 h-4 mr-2" />
+              Withdraw New Pouch
+            </CommonButton>
+            <CommonButton
+              variant="secondary"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/return-pouch")}
+            >
+              <ArrowUpCircle className="w-4 h-4 mr-2" />
+              Return Pouch
+            </CommonButton>
+            <CommonButton
+              variant="secondary"
+              className="w-full justify-start"
+              onClick={() => (window.location.href = "/pouch-history")}
+            >
+              <Calendar className="w-4 h-4 mr-2" />
+              View Pouch History
+            </CommonButton>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
