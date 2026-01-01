@@ -1,35 +1,42 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { loginAPI, getLoginUser, otpVerificationAPI, type LoginPayload, type OtpVerificationPayload } from '@/lib/api/auth';
-import type { AuthPayload } from '@/lib/auth';
+import { cookies } from "next/headers";
+import {
+  getLoginUser,
+  loginAPI,
+  otpVerificationAPI,
+  type LoginPayload,
+  type OtpVerificationPayload,
+} from "@/lib/api/auth";
+import type { AuthPayload } from "@/lib/auth";
 
 export interface LoginActionResult {
   success: boolean;
   error?: string;
   requiresOtp?: boolean;
   otpReference?: string;
-  user?: any;
-  session?: any;
+  user?: unknown;
+  session?: unknown;
 }
 
-export async function loginAction(formData: FormData): Promise<LoginActionResult> {
+export async function loginAction(
+  formData: FormData
+): Promise<LoginActionResult> {
   try {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const gReCaptchaToken = formData.get('gReCaptchaToken') as string | null;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const gReCaptchaToken = formData.get("gReCaptchaToken") as string | null;
 
     if (!email || !password) {
       return {
         success: false,
-        error: 'Email and password are required'
+        error: "Email and password are required",
       };
     }
 
     const payload: LoginPayload = {
       email,
-      password
+      password,
     };
 
     if (gReCaptchaToken) {
@@ -44,7 +51,7 @@ export async function loginAction(formData: FormData): Promise<LoginActionResult
         success: true,
         requiresOtp: true,
         otpReference: loginResponse.otpReference,
-        user: loginResponse.user
+        user: loginResponse.user,
       };
     }
 
@@ -53,7 +60,7 @@ export async function loginAction(formData: FormData): Promise<LoginActionResult
       // Fetch full user data
       const userData = await getLoginUser({
         Authorization: `Bearer ${loginResponse.session.accessToken}`,
-        org: loginResponse.user.orgId
+        org: loginResponse.user.orgId,
       });
 
       // Set cookie
@@ -64,60 +71,74 @@ export async function loginAction(formData: FormData): Promise<LoginActionResult
           lastName: userData.user?.lastName || loginResponse.user.lastName,
           email: userData.user?.email || loginResponse.user.email,
           phone: userData.user?.phone,
-          userType: userData.user?.userType || loginResponse.user.userType
+          userType: userData.user?.userType || loginResponse.user.userType,
+          permissionGroup: userData.user?.permissionGroup ||
+            userData.permissionGroup || {
+              type:
+                (
+                  userData.user?.userType || loginResponse.user.userType
+                )?.toLowerCase() === "paramedic"
+                  ? "paramedic"
+                  : "logistic",
+            },
         },
         accessToken: loginResponse.session.accessToken,
         session: loginResponse.session,
         org: userData.user?.orgId || loginResponse.user.orgId,
-        customer: (userData as any).customer?.id
+        customer: (userData as { customer?: { id?: string } }).customer?.id,
       };
 
       const cookieStore = await cookies();
-      cookieStore.set('emsAuth', JSON.stringify(authPayload), {
-        path: '/',
+      cookieStore.set("emsAuth", JSON.stringify(authPayload), {
+        path: "/",
         maxAge: 60 * 60 * 24 * 30, // 30 days
-        sameSite: 'lax',
+        sameSite: "lax",
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === "production",
       });
 
       return {
         success: true,
-        requiresOtp: false
+        requiresOtp: false,
       };
     }
 
     return {
       success: false,
-      error: 'Invalid response from server'
+      error: "Invalid response from server",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Login failed. Please try again.'
+      error:
+        error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.",
     };
   }
 }
 
-export async function verifyOtpAction(formData: FormData): Promise<LoginActionResult> {
+export async function verifyOtpAction(
+  formData: FormData
+): Promise<LoginActionResult> {
   try {
-    const otp = formData.get('otp') as string;
-    const otpReference = formData.get('otpReference') as string;
-    const userId = formData.get('userId') as string;
-    const isOtpExtension = formData.get('isOtpExtension') === 'true';
-    const gReCaptchaToken = formData.get('gReCaptchaToken') as string | null;
+    const otp = formData.get("otp") as string;
+    const otpReference = formData.get("otpReference") as string;
+    const userId = formData.get("userId") as string;
+    const isOtpExtension = formData.get("isOtpExtension") === "true";
+    const gReCaptchaToken = formData.get("gReCaptchaToken") as string | null;
 
     if (!otp || !otpReference || !userId) {
       return {
         success: false,
-        error: 'OTP, OTP reference, and user ID are required'
+        error: "OTP, OTP reference, and user ID are required",
       };
     }
 
     const payload: OtpVerificationPayload = {
       isOtpExtension,
       otp: parseInt(otp, 10),
-      otpReference
+      otpReference,
     };
 
     if (gReCaptchaToken) {
@@ -130,7 +151,7 @@ export async function verifyOtpAction(formData: FormData): Promise<LoginActionRe
       // Fetch full user data
       const userData = await getLoginUser({
         Authorization: `Bearer ${verifyResponse.session.accessToken}`,
-        org: verifyResponse.user.orgId
+        org: verifyResponse.user.orgId,
       });
 
       // Set cookie
@@ -141,39 +162,49 @@ export async function verifyOtpAction(formData: FormData): Promise<LoginActionRe
           lastName: userData.user?.lastName || verifyResponse.user.lastName,
           email: userData.user?.email || verifyResponse.user.email,
           phone: userData.user?.phone,
-          userType: userData.user?.userType || verifyResponse.user.userType
+          userType: userData.user?.userType || verifyResponse.user.userType,
+          permissionGroup: userData.user?.permissionGroup ||
+            userData.permissionGroup || {
+              type:
+                (
+                  userData.user?.userType || verifyResponse.user.userType
+                )?.toLowerCase() === "paramedic"
+                  ? "paramedic"
+                  : "logistic",
+            },
         },
         accessToken: verifyResponse.session.accessToken,
         session: verifyResponse.session,
         org: userData.user?.orgId || verifyResponse.user.orgId,
-        customer: (userData as any).customer?.id
+        customer: (userData as { customer?: { id?: string } }).customer?.id,
       };
 
       const cookieStore = await cookies();
-      cookieStore.set('emsAuth', JSON.stringify(authPayload), {
-        path: '/',
+      cookieStore.set("emsAuth", JSON.stringify(authPayload), {
+        path: "/",
         maxAge: 60 * 60 * 24 * 30, // 30 days
-        sameSite: 'lax',
+        sameSite: "lax",
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === "production",
       });
 
       return {
         success: true,
-        requiresOtp: false
+        requiresOtp: false,
       };
     }
 
     return {
       success: false,
-      error: 'Invalid OTP. Please try again.'
+      error: "Invalid OTP. Please try again.",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'OTP verification failed. Please try again.'
+      error:
+        error instanceof Error
+          ? error.message
+          : "OTP verification failed. Please try again.",
     };
   }
 }
-
-

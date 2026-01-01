@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     const cookieStore = await cookies();
 
@@ -12,14 +12,20 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Logged out successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Logout error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to logout";
+    const errorStack =
+      error instanceof Error && process.env.NODE_ENV === "development"
+        ? error.stack
+        : undefined;
+
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Failed to logout",
-        details:
-          process.env.NODE_ENV === "development" ? error.stack : undefined,
+        error: errorMessage,
+        details: errorStack,
       },
       { status: 500 }
     );

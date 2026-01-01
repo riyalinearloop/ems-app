@@ -1,13 +1,10 @@
 "use client";
 
-import React from "react";
 import {
-  FileText,
   Calendar,
-  User,
+  FileText,
   Package,
-  Image as ImageIcon,
-  Clock,
+  User,
 } from "lucide-react";
 import {
   Card,
@@ -17,7 +14,10 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import CommonButton from "@/components/custom-components/commonButton";
-import { CommonTable, ColumnType } from "@/components/custom-components/commonTable";
+import {
+  CommonTable,
+  ColumnType,
+} from "@/components/custom-components/commonTable";
 import { useState } from "react";
 import type { Report } from "@/components/data/pouch-history";
 
@@ -67,7 +67,9 @@ const PouchHistoryScene = ({ reports }: PouchHistorySceneProps) => {
       dataIndex: "type",
       render: (value: string) => (
         <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getReportTypeColor(value)}`}
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getReportTypeColor(
+            value
+          )}`}
         >
           {formatReportType(value)}
         </span>
@@ -131,7 +133,7 @@ const PouchHistoryScene = ({ reports }: PouchHistorySceneProps) => {
     {
       title: "Actions",
       dataIndex: "id",
-      render: (value: string, row: Report) => (
+      render: (_value: string, row: Report) => (
         <div className="flex gap-2">
           <CommonButton variant="secondary" size="sm">
             View
@@ -147,25 +149,25 @@ const PouchHistoryScene = ({ reports }: PouchHistorySceneProps) => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Header */}
       <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <CardHeader className="border-b border-gray-200 p-4 md:p-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <CardTitle className="text-xl md:text-2xl font-bold text-gray-900 flex items-center">
-                <FileText className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-blue-600" />
-                Pouch History
+        <CardHeader className="border-b border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 flex items-center">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3 text-blue-600 flex-shrink-0" />
+                <span className="truncate">Pouch History</span>
               </CardTitle>
-              <CardDescription className="text-sm md:text-base text-gray-600 mt-1">
+              <CardDescription className="text-xs sm:text-sm md:text-base text-gray-600 mt-1">
                 Complete audit trail of all pouch transactions and activities
               </CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4 md:p-6">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Package className="w-4 h-4" />
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+            <Package className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
             <span className="font-medium">Total Reports:</span>
             <span>{reports.length}</span>
           </div>
@@ -174,12 +176,12 @@ const PouchHistoryScene = ({ reports }: PouchHistorySceneProps) => {
 
       {/* Reports Table */}
       <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <CardHeader className="border-b border-gray-200 p-4 md:p-6">
-          <CardTitle className="text-lg font-semibold text-gray-900">
+        <CardHeader className="border-b border-gray-200 p-4 sm:p-6">
+          <CardTitle className="text-base sm:text-lg font-semibold text-gray-900">
             All Reports
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 md:p-6">
+        <CardContent className="p-4 sm:p-6">
           <CommonTable
             columns={columns}
             data={paginatedReports}
@@ -194,4 +196,3 @@ const PouchHistoryScene = ({ reports }: PouchHistorySceneProps) => {
 };
 
 export default PouchHistoryScene;
-

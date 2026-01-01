@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { DashboardScene } from "./dashboardScene";
 
 interface DashboardContainerProps {

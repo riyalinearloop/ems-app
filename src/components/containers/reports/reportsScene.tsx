@@ -1,41 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  FileText,
-  Download,
   Calendar,
-  TrendingUp,
+  Download,
+  FileText,
+  Filter,
   Package,
-  User,
-  Plus,
-  FileBarChart,
 } from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import CommonButton from "@/components/custom-components/commonButton";
-import { CommonTable, ColumnType } from "@/components/custom-components/commonTable";
+import {
+  CommonTable,
+  ColumnType,
+} from "@/components/custom-components/commonTable";
 import type {
   ReportHistoryRow,
   ReportStats,
   QuickReportTemplate,
 } from "@/components/data/reports";
 
+type ReportTabType = "medication" | "inventory" | "paramedic";
+
 interface ReportsSceneProps {
   reportHistory: ReportHistoryRow[];
   reportStats: ReportStats;
   quickReportTemplates: QuickReportTemplate[];
+  activeTab?: ReportTabType;
+  onTabChange?: (tab: ReportTabType) => void;
+  onGenerateReport?: () => void;
 }
 
 const ReportsScene = ({
   reportHistory,
-  reportStats,
+  reportStats: _reportStats,
   quickReportTemplates,
+  activeTab = "medication",
+  onTabChange,
+  onGenerateReport,
 }: ReportsSceneProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -94,7 +101,9 @@ const ReportsScene = ({
           {value || (
             <span className="text-gray-400 italic">
               {row.subtype
-                ? `${formatReportType(row.type)} - ${formatReportType(row.subtype)}`
+                ? `${formatReportType(row.type)} - ${formatReportType(
+                    row.subtype
+                  )}`
                 : formatReportType(row.type)}
             </span>
           )}
@@ -121,7 +130,9 @@ const ReportsScene = ({
     {
       title: "Period",
       dataIndex: "period",
-      render: (value: string) => <span className="text-gray-500">{value || "-"}</span>,
+      render: (value: string) => (
+        <span className="text-gray-500">{value || "-"}</span>
+      ),
     },
     {
       title: "Generated",
@@ -151,63 +162,77 @@ const ReportsScene = ({
     },
   ];
 
+  const reportTabs = [
+    {
+      key: "medication" as ReportTabType,
+      label: "Medication Reports",
+      icon: FileText,
+    },
+    {
+      key: "inventory" as ReportTabType,
+      label: "Inventory Reports",
+      icon: Package,
+    },
+    {
+      key: "paramedic" as ReportTabType,
+      label: "Paramedic Reports",
+      icon: FileText,
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* Header Stats */}
-      <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <CardHeader className="border-b border-gray-200 p-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <CardTitle className="text-xl md:text-2xl font-bold text-gray-900 flex items-center">
-                <FileBarChart className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-blue-600" />
-                Reports
-              </CardTitle>
-              <CardDescription className="text-sm md:text-base text-gray-600">
-                Generate and manage system reports
-              </CardDescription>
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      {/* Header */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="p-4 sm:p-6 border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                Reports Module
+              </h2>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">
+                Generate and download medication and inventory reports
+              </p>
             </div>
-            <CommonButton variant="primary">
-              <Plus className="w-4 h-4 mr-2" />
-              Generate Report
-            </CommonButton>
+            <button
+              onClick={onGenerateReport}
+              className="flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 whitespace-nowrap w-full sm:w-auto"
+            >
+              <Filter className="w-4 h-4 flex-shrink-0" />
+              <span>Generate Report</span>
+            </button>
           </div>
-        </CardHeader>
-        <CardContent className="p-4 md:p-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard
-              label="Medication Reports"
-              value={reportStats.medication}
-              iconColor="text-blue-600"
-              bgColor="bg-blue-50"
-            />
-            <StatCard
-              label="Inventory Reports"
-              value={reportStats.inventory}
-              iconColor="text-green-600"
-              bgColor="bg-green-50"
-            />
-            <StatCard
-              label="Paramedic Reports"
-              value={reportStats.paramedic}
-              iconColor="text-purple-600"
-              bgColor="bg-purple-50"
-            />
-            <StatCard
-              label="This Month"
-              value={reportStats.thisMonth}
-              iconColor="text-orange-600"
-              bgColor="bg-orange-50"
-            />
+        </div>
+        <div className="p-4 sm:p-6">
+          <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1 flex-wrap gap-1">
+            {reportTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => onTabChange?.(tab.key)}
+                  className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm ${
+                    isActive
+                      ? "bg-white text-blue-600 shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  <Icon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="whitespace-nowrap">{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Quick Report Templates */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 px-2">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 px-2">
           Quick Report Templates
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {quickReportTemplates.map((template) => (
             <QuickReportCard key={template.id} template={template} />
           ))}
@@ -235,21 +260,7 @@ const ReportsScene = ({
   );
 };
 
-interface StatCardProps {
-  label: string;
-  value: number;
-  iconColor: string;
-  bgColor: string;
-}
-
-const StatCard = ({ label, value, iconColor, bgColor }: StatCardProps) => {
-  return (
-    <div className={`text-center p-4 rounded-lg ${bgColor}`}>
-      <p className={`text-2xl font-bold ${iconColor}`}>{value}</p>
-      <p className="text-sm text-gray-600 mt-1">{label}</p>
-    </div>
-  );
-};
+// StatCard component removed - not currently used
 
 interface QuickReportCardProps {
   template: QuickReportTemplate;
@@ -266,7 +277,9 @@ const QuickReportCard = ({ template }: QuickReportCardProps) => {
     <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div
-          className={`w-12 h-12 rounded-lg ${iconColors[template.iconColor]} flex items-center justify-center mb-4`}
+          className={`w-12 h-12 rounded-lg ${
+            iconColors[template.iconColor]
+          } flex items-center justify-center mb-4`}
         >
           <FileText className="w-6 h-6" />
         </div>
@@ -281,4 +294,3 @@ const QuickReportCard = ({ template }: QuickReportCardProps) => {
 };
 
 export default ReportsScene;
-

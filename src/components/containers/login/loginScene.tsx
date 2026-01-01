@@ -1,10 +1,10 @@
 "use client";
 
-import { Loader2, Package } from "lucide-react";
-import Link from "next/link";
-import type { FormEvent } from "react";
-import type { Control } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import CommonButton from "@/components/custom-components/commonButton";
+import {
+  InputFieldOnly,
+  PasswordField,
+} from "@/components/form-fields/FormFieldsComponent";
 import {
   Card,
   CardContent,
@@ -13,13 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  InputFieldOnly,
-  PasswordField,
-} from "@/components/form-fields/FormFieldsComponent";
 import { LoginFormInputs } from "@/lib/schemas/loginSchema";
+import { Package } from "lucide-react";
+import Link from "next/link";
+import type { FormEvent } from "react";
+import type { Control } from "react-hook-form";
 import OtpInput from "react-otp-input";
-import CommonButton from "@/components/custom-components/commonButton";
 
 interface LoginSceneProps {
   control: Control<LoginFormInputs>;
@@ -62,7 +61,7 @@ const LoginScene = (props: LoginSceneProps) => {
     handleOtpSubmit,
     setRememberMe,
     otpCounter,
-    resendCounter,
+    resendCounter: _resendCounter,
     setOtp,
     onResendOtp,
   } = props;
@@ -78,19 +77,21 @@ const LoginScene = (props: LoginSceneProps) => {
   };
 
   return (
-    <Card className="w-full pb-6 pt-6 max-w-md rounded-2xl border-none bg-white shadow-2xl shadow-blue-900/10">
+    <Card className="w-full pb-4 sm:pb-6 pt-4 sm:pt-6 max-w-md rounded-xl sm:rounded-2xl border-none bg-white shadow-xl sm:shadow-2xl shadow-blue-900/10 mx-auto">
       {!isVerificationPage && (
         <>
-          <CardHeader className="items-center text-center">
-            <span className="mb-4 inline-flex mx-auto size-16 items-center justify-center rounded-2xl bg-blue-600 text-white">
-              <Package className="size-8" />
+          <CardHeader className="items-center text-center px-4 sm:px-6">
+            <span className="mb-3 sm:mb-4 inline-flex mx-auto size-12 sm:size-14 md:size-16 items-center justify-center rounded-xl sm:rounded-2xl bg-blue-600 text-white">
+              <Package className="size-6 sm:size-7 md:size-8" />
             </span>
-            <CardTitle className="text-2xl">HealthO EMS</CardTitle>
-            <CardDescription>Logistics Management System</CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">HealthO EMS</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
+              Logistics Management System
+            </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <form className="space-y-6" onSubmit={onSubmit}>
+          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
+            <form className="space-y-4 sm:space-y-6" onSubmit={onSubmit}>
               <InputFieldOnly
                 name="email"
                 control={control}
@@ -109,11 +110,11 @@ const LoginScene = (props: LoginSceneProps) => {
                 showPassword={showPassword}
                 onTogglePassword={() => setIsShowPassword(!showPassword)}
               />
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 text-xs sm:text-sm">
                 <span className="text-neutral-500">Need help signing in?</span>
                 <Link
                   href="/forgot-password"
-                  className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                  className="font-medium text-blue-600 hover:text-blue-700 hover:underline whitespace-nowrap"
                 >
                   Forgot password
                 </Link>
@@ -122,7 +123,7 @@ const LoginScene = (props: LoginSceneProps) => {
                 variant="primary"
                 size="sm"
                 type="submit"
-                className={`w-full mt-2 ${
+                className={`w-full mt-2 text-sm sm:text-base ${
                   otpCounter ? "cursor-not-allowed" : ""
                 }`}
                 loading={status === "loading"}
@@ -138,25 +139,25 @@ const LoginScene = (props: LoginSceneProps) => {
 
       {isVerificationPage && (
         <>
-          <CardHeader className="items-center text-center">
-            <span className="mb-4 inline-flex mx-auto size-16 items-center justify-center rounded-2xl bg-blue-600 text-white">
-              <Package className="size-8" />
+          <CardHeader className="items-center text-center px-4 sm:px-6">
+            <span className="mb-3 sm:mb-4 inline-flex mx-auto size-12 sm:size-14 md:size-16 items-center justify-center rounded-xl sm:rounded-2xl bg-blue-600 text-white">
+              <Package className="size-6 sm:size-7 md:size-8" />
             </span>
-            <CardTitle className="text-2xl">Verify OTP</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">Verify OTP</CardTitle>
+            <CardDescription className="text-xs sm:text-sm px-2">
               Enter the one-time passcode sent to your registered contact.
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-8 pt-2">
+          <CardContent className="space-y-6 sm:space-y-8 pt-2 px-4 sm:px-6">
             <form
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
               onSubmit={(e) => {
                 e.preventDefault();
                 handleOtpSubmit(e);
               }}
             >
-              <div className="space-y-4 pt-4">
+              <div className="space-y-3 sm:space-y-4 pt-2 sm:pt-4">
                 <OtpInput
                   value={otp}
                   onChange={(newOtp: string) => {
@@ -178,26 +179,30 @@ const LoginScene = (props: LoginSceneProps) => {
                   renderInput={(inputProps) => (
                     <Input
                       {...inputProps}
-                      className="h-14 w-16 border-2 rounded-xl bg-white text-center text-xl font-semibold text-black outline-none ring-0 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 placeholder:text-neutral-400 sm:h-14 sm:w-14"
+                      className="h-12 w-12 sm:h-14 sm:w-14 md:w-16 border-2 rounded-lg sm:rounded-xl bg-white text-center text-lg sm:text-xl font-semibold text-black outline-none ring-0 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 placeholder:text-neutral-400"
                       style={{ color: "#000" }}
                     />
                   )}
                   shouldAutoFocus
-                  containerStyle="flex items-center justify-center gap-3 sm:gap-4"
+                  containerStyle="flex items-center justify-center gap-2 sm:gap-3 md:gap-4"
                 />
                 {otpError && (
-                  <p className="text-center text-sm text-red-500">{otpError}</p>
+                  <p className="text-center text-xs sm:text-sm text-red-500">
+                    {otpError}
+                  </p>
                 )}
-                <label className="mt-2 flex items-center justify-center gap-2 text-xs text-neutral-600">
+                <label className="mt-2 flex items-center justify-center gap-2 text-[10px] sm:text-xs text-neutral-600 px-2">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-3 w-3 accent-blue-600"
+                    className="h-3 w-3 accent-blue-600 flex-shrink-0"
                   />
-                  <span>Keep me signed in on this device for 30 days.</span>
+                  <span className="text-center">
+                    Keep me signed in on this device for 30 days.
+                  </span>
                 </label>
-                <p className="mt-3 text-center text-xs text-neutral-500">
+                <p className="mt-3 text-center text-[10px] sm:text-xs text-neutral-500 px-2">
                   Didn&apos;t receive the code?{" "}
                   {otpCounter > 0 ? (
                     <span>Resend available in {formatTime(otpCounter)}.</span>
@@ -205,20 +210,12 @@ const LoginScene = (props: LoginSceneProps) => {
                     <CommonButton
                       variant="link"
                       size="sm"
-                      className={`font-medium text-blue-600 hover:text-blue-700 hover:underline`}
+                      className={`font-medium text-blue-600 hover:text-blue-700 hover:underline text-[10px] sm:text-xs`}
                       loadingText="Signing in..."
                       onClick={onResendOtp}
                     >
                       Resend code
                     </CommonButton>
-
-                    // <button
-                    //   type="button"
-                    //   onClick={onResendOtp}
-                    //   className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
-                    // >
-                    //   Resend code
-                    // </button>
                   )}
                 </p>
               </div>
@@ -227,7 +224,7 @@ const LoginScene = (props: LoginSceneProps) => {
                 variant="primary"
                 size="sm"
                 type="submit"
-                className={`w-full `}
+                className="w-full text-sm sm:text-base"
                 loading={isOtpLoading}
                 loadingText="Verifying..."
                 disabled={isOtpSubmitDisabled}

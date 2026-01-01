@@ -29,14 +29,20 @@ const MetricCard = ({
   iconColor,
 }: MetricCardProps) => (
   <Card>
-    <CardContent className="p-6">
+    <CardContent className="p-4 sm:p-5 md:p-6">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1 truncate">
+            {title}
+          </p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900">
+            {value}
+          </p>
         </div>
-        <div className={`${iconColor} p-3 rounded-lg`}>
-          <Icon className="w-6 h-6 text-white" />
+        <div
+          className={`${iconColor} p-2 sm:p-2.5 md:p-3 rounded-lg flex-shrink-0 ml-2`}
+        >
+          <Icon className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
         </div>
       </div>
     </CardContent>
@@ -143,9 +149,9 @@ export const DashboardScene = ({ userType }: DashboardSceneProps) => {
   ];
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4 md:space-y-6 px-2 sm:px-0">
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <MetricCard
           title="Total Medications"
           value="479"
@@ -176,19 +182,19 @@ export const DashboardScene = ({ userType }: DashboardSceneProps) => {
         {/* Inventory Overview */}
         <div className="lg:col-span-2 space-y-4 md:space-y-6">
           <div>
-            <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2">
               Inventory Overview
             </h2>
-            <p className="text-xs md:text-sm text-gray-600 mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
               Real-time inventory levels across all locations
             </p>
 
             {/* Headquarters */}
             <div className="mb-4 md:mb-6">
-              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3">
+              <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                 Headquarters (HQ)
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
                 {medications.map((med) => (
                   <InventoryCard key={med.name} {...med} />
                 ))}
@@ -197,10 +203,10 @@ export const DashboardScene = ({ userType }: DashboardSceneProps) => {
 
             {/* Depot 1 */}
             <div>
-              <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3">
+              <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">
                 Depot 1 (D1)
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
                 {depot1Medications.map((med) => (
                   <InventoryCard key={med.name} {...med} />
                 ))}
@@ -268,9 +274,9 @@ const ParamedicDashboard = () => {
   ];
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4 md:space-y-6 px-2 sm:px-0">
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <MetricCard
           title="Active Pouches"
           value={myPouches.length.toString()}
@@ -297,38 +303,40 @@ const ParamedicDashboard = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
         {/* My Active Pouches */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5 text-blue-600" />
-              My Active Pouches
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+              <span>My Active Pouches</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0">
             {myPouches.map((pouch) => (
               <Card key={pouch.pouchNumber} className="bg-gray-50">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-gray-900">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-2 sm:mb-3">
+                    <h4 className="font-semibold text-sm sm:text-base text-gray-900">
                       {pouch.pouchNumber}
                     </h4>
-                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center rounded-full px-2 sm:px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 w-fit">
                       {pouch.status}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-600 mb-3">
+                  <p className="text-xs text-gray-600 mb-2 sm:mb-3">
                     Withdrawn: {pouch.withdrawnDate}
                   </p>
                   <div className="space-y-1">
                     {pouch.medications.map((med, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between text-sm"
+                        className="flex items-center justify-between text-xs sm:text-sm"
                       >
-                        <span className="text-gray-700">{med.name}</span>
-                        <span className="text-gray-600">
+                        <span className="text-gray-700 truncate flex-1 min-w-0">
+                          {med.name}
+                        </span>
+                        <span className="text-gray-600 ml-2 whitespace-nowrap">
                           {med.used}/{med.quantity} used
                         </span>
                       </div>
@@ -342,36 +350,36 @@ const ParamedicDashboard = () => {
 
         {/* Quick Actions */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-green-600" />
-              Quick Actions
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+              <span>Quick Actions</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-2 sm:space-y-3 p-4 sm:p-6 pt-0">
             <CommonButton
               variant="primary"
-              className="w-full justify-start"
+              className="w-full justify-start text-xs sm:text-sm md:text-base"
               onClick={() => (window.location.href = "/withdraw-pouch")}
             >
-              <ArrowDownCircle className="w-4 h-4 mr-2" />
-              Withdraw New Pouch
+              <ArrowDownCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">Withdraw New Pouch</span>
             </CommonButton>
             <CommonButton
               variant="secondary"
-              className="w-full justify-start"
+              className="w-full justify-start text-xs sm:text-sm md:text-base"
               onClick={() => (window.location.href = "/return-pouch")}
             >
-              <ArrowUpCircle className="w-4 h-4 mr-2" />
-              Return Pouch
+              <ArrowUpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">Return Pouch</span>
             </CommonButton>
             <CommonButton
               variant="secondary"
-              className="w-full justify-start"
+              className="w-full justify-start text-xs sm:text-sm md:text-base"
               onClick={() => (window.location.href = "/pouch-history")}
             >
-              <Calendar className="w-4 h-4 mr-2" />
-              View Pouch History
+              <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">View Pouch History</span>
             </CommonButton>
           </CardContent>
         </Card>

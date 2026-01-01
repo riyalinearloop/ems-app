@@ -9,11 +9,11 @@ export interface AuthPayload {
     userType: string;
     permissionGroup?: {
       type: "logistic" | "paramedic";
-      [key: string]: any;
+      [key: string]: unknown;
     };
   };
   accessToken: string;
-  session: any;
+  session: unknown;
   org: string;
   customer?: string;
 }
@@ -59,7 +59,9 @@ export const getAuthCookie = (): AuthPayload | null => {
 
     if (emsAuthCookie) {
       try {
-        const cookieValue = decodeURIComponent(emsAuthCookie.split("=")[1]);
+        const parts = emsAuthCookie.split("=");
+        if (parts.length < 2) return null;
+        const cookieValue = decodeURIComponent(parts[1] || "");
         return JSON.parse(cookieValue);
       } catch (error) {
         console.error("Error parsing auth cookie:", error);
@@ -86,11 +88,12 @@ export const logout = async (): Promise<void> => {
     const authCookie = getAuthCookie();
 
     // Call the logout API if we have a session
-    if (authCookie?.session?.id && authCookie?.accessToken && authCookie?.org) {
+    const session = authCookie?.session as { id?: string } | undefined;
+    if (session?.id && authCookie?.accessToken && authCookie?.org) {
       try {
         const { logoutAPI } = await import("@/lib/api/auth");
         await logoutAPI({
-          sessionId: authCookie.session.id,
+          sessionId: session.id,
           Authorization: `Bearer ${authCookie.accessToken}`,
           org: authCookie.org,
         });

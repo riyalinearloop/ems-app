@@ -1,6 +1,9 @@
 "use client";
 
-import { CommonTable, ColumnType } from "@/components/custom-components/commonTable";
+import {
+  CommonTable,
+  ColumnType,
+} from "@/components/custom-components/commonTable";
 import { useState } from "react";
 import CommonButton from "@/components/custom-components/commonButton";
 import { Plus } from "lucide-react";
@@ -24,7 +27,6 @@ interface InventoryTransferSceneProps {
 
 const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
   const {
-    locations,
     recentTransfers,
     transferStatusConfig,
     onOpenTransferModal,
@@ -49,7 +51,7 @@ const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
     {
       title: "From → To",
       dataIndex: "from",
-      render: (value: string, row: any) => (
+      render: (value: string, row: { to: string }) => (
         <span className="text-sm text-gray-500">
           {value} → {row.to}
         </span>
@@ -67,6 +69,13 @@ const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
       dataIndex: "status",
       render: (value: string) => {
         const statusConfig = transferStatusConfig[value];
+        if (!statusConfig) {
+          return (
+            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">
+              {value}
+            </span>
+          );
+        }
         return (
           <span
             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statusConfig.badgeClasses} ${statusConfig.textClasses}`}
@@ -86,15 +95,15 @@ const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Recent transfers table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">
+        <div className="p-4 sm:p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">
               Recent Transfers
             </h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">
               View and manage inventory transfers between locations
             </p>
           </div>
@@ -102,10 +111,10 @@ const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
             variant="primary"
             size="default"
             onClick={onOpenTransferModal}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
           >
             <Plus className="w-4 h-4" />
-            New Transfer
+            <span className="whitespace-nowrap">New Transfer</span>
           </CommonButton>
         </div>
         <CommonTable

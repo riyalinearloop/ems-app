@@ -5,10 +5,10 @@ import CommonButton from "@/components/custom-components/commonButton";
 import {
   AlertTriangle,
   CheckCircle,
-  Shield,
-  Phone,
   FileText,
   Hexagon,
+  Phone,
+  Shield,
 } from "lucide-react";
 import type { Incident } from "@/components/data/incidents";
 
@@ -33,8 +33,10 @@ const IncidentDetailsModal = ({
   if (!incident) return null;
 
   // Format date from DD/MM/YYYY to M/D/YYYY
-  const formatDate = (dateStr: string) => {
+  const formatDate = (dateStr: string | undefined) => {
+    if (!dateStr) return "";
     const [day, month, year] = dateStr.split("/");
+    if (!day || !month || !year) return dateStr;
     return `${parseInt(month)}/${parseInt(day)}/${year}`;
   };
 
@@ -84,12 +86,12 @@ const IncidentDetailsModal = ({
 
   const handleUpdateStatus = () => {
     // Handle update status action
-    console.log("Update status clicked");
+    // TODO: Implement update status functionality
   };
 
   const handleExportReport = () => {
     // Handle export report action
-    console.log("Export report clicked");
+    // TODO: Implement export report functionality
   };
 
   const footerActions = (
@@ -99,7 +101,7 @@ const IncidentDetailsModal = ({
         size="sm"
         type="button"
         onClick={handleExportReport}
-        className="w-30 bg-gray-600 hover:bg-gray-700 text-white"
+        className="w-full sm:w-auto bg-gray-600 hover:bg-gray-700 text-white"
       >
         Export Report
       </CommonButton>
@@ -108,7 +110,7 @@ const IncidentDetailsModal = ({
         size="sm"
         type="button"
         onClick={handleUpdateStatus}
-        className="w-30"
+        className="w-full sm:w-auto"
       >
         Update Status
       </CommonButton>
@@ -130,13 +132,13 @@ const IncidentDetailsModal = ({
       footerActions={footerActions}
       dialogContentClassName="max-w-[95%] md:max-w-[90%] lg:max-w-[800px]"
     >
-      <div className="max-h-[75vh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 space-y-6">
+      <div className="max-h-[70vh] sm:max-h-[75vh] overflow-y-auto px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 space-y-4 sm:space-y-5 md:space-y-6">
         {/* Incident Information Section */}
         <div>
-          <h4 className="text-base font-semibold text-gray-900 mb-4">
+          <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">
             Incident Information
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-500 mb-1">
                 Type
@@ -269,4 +271,3 @@ const IncidentDetailsModal = ({
 };
 
 export default IncidentDetailsModal;
-

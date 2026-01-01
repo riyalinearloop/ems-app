@@ -68,7 +68,7 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
         size="sm"
         type="button"
         onClick={handleClose}
-        className="w-30"
+        className="w-full sm:w-auto"
       >
         Cancel
       </CommonButton>
@@ -76,7 +76,7 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
         variant="primary"
         type="submit"
         size="sm"
-        className="w-30"
+        className="w-full sm:w-auto"
       >
         Create Order
       </CommonButton>
@@ -96,18 +96,18 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
       onSubmit={handleSubmit}
       dialogContentClassName="max-w-[95%] md:max-w-[90%] lg:max-w-[1000px]"
     >
-      <div className="max-h-[70vh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 space-y-6 bg-gray-50">
+      <div className="max-h-[65vh] sm:max-h-[70vh] overflow-y-auto px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 space-y-4 sm:space-y-5 md:space-y-6 bg-gray-50">
         {/* Order configuration */}
         <div>
-          <label className="mb-3 block text-sm font-medium text-gray-700">
+          <label className="mb-2 sm:mb-3 block text-xs sm:text-sm font-medium text-gray-700">
             Order Configuration
           </label>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
             {/* Version 1 */}
             <button
               type="button"
               onClick={() => setOrderVersion("expiry")}
-              className={`rounded-lg border-2 p-4 text-left transition-all ${
+              className={`rounded-lg border-2 p-3 sm:p-4 text-left transition-all ${
                 orderVersion === "expiry"
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-200 hover:border-gray-300"
@@ -115,15 +115,15 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
             >
               <div className="mb-2 flex items-center">
                 <div
-                  className={`mr-3 h-4 w-4 rounded-full ${
+                  className={`mr-2 sm:mr-3 h-3 w-3 sm:h-4 sm:w-4 rounded-full flex-shrink-0 ${
                     orderVersion === "expiry" ? "bg-blue-500" : "bg-gray-300"
                   }`}
                 />
-                <h4 className="font-medium text-gray-900">
+                <h4 className="font-medium text-sm sm:text-base text-gray-900">
                   Version 1: Expiry-Based
                 </h4>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Order based on expiring medications and usage data
               </p>
             </button>
@@ -132,7 +132,7 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
             <button
               type="button"
               onClick={() => setOrderVersion("threshold")}
-              className={`rounded-lg border-2 p-4 text-left transition-all ${
+              className={`rounded-lg border-2 p-3 sm:p-4 text-left transition-all ${
                 orderVersion === "threshold"
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-200 hover:border-gray-300"
@@ -140,17 +140,15 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
             >
               <div className="mb-2 flex items-center">
                 <div
-                  className={`mr-3 h-4 w-4 rounded-full ${
-                    orderVersion === "threshold"
-                      ? "bg-blue-500"
-                      : "bg-gray-300"
+                  className={`mr-2 sm:mr-3 h-3 w-3 sm:h-4 sm:w-4 rounded-full flex-shrink-0 ${
+                    orderVersion === "threshold" ? "bg-blue-500" : "bg-gray-300"
                   }`}
                 />
-                <h4 className="font-medium text-gray-900">
+                <h4 className="font-medium text-sm sm:text-base text-gray-900">
                   Version 2: Threshold-Based
                 </h4>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Order based on minimum/maximum thresholds
               </p>
             </button>
@@ -206,9 +204,7 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
                 className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex-1 text-sm text-left">
-                  <span className="font-medium text-gray-700">
-                    {item.name}
-                  </span>
+                  <span className="font-medium text-gray-700">{item.name}</span>
                   {item.suggested ? (
                     <span className="ml-2 text-sm text-blue-600">
                       (Suggested: {item.suggested})
@@ -220,7 +216,9 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
                   min={0}
                   placeholder="0"
                   value={orderQuantitiesState[item.name] || ""}
-                  onChange={(e) => handleQuantityChange(item.name, e.target.value)}
+                  onChange={(e) =>
+                    handleQuantityChange(item.name, e.target.value)
+                  }
                   className="w-full rounded border border-gray-300 px-2 py-1 text-right text-sm sm:w-24 sm:text-center"
                 />
               </div>
@@ -233,4 +231,3 @@ const OrderManagementModal = (props: OrderManagementModalProps) => {
 };
 
 export default OrderManagementModal;
-

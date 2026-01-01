@@ -39,7 +39,9 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
 
   // Handle quantity change
   const handleQuantityChange = (medicationName: string, delta: number) => {
-    const medication = availableMedications.find((m) => m.name === medicationName);
+    const medication = availableMedications.find(
+      (m) => m.name === medicationName
+    );
     if (!medication || medication.available === undefined) return;
 
     const currentQuantity = transferQuantities[medicationName] || 0;
@@ -56,7 +58,9 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
 
   // Handle direct input change
   const handleInputChange = (medicationName: string, value: string) => {
-    const medication = availableMedications.find((m) => m.name === medicationName);
+    const medication = availableMedications.find(
+      (m) => m.name === medicationName
+    );
     if (!medication || medication.available === undefined) return;
 
     const numValue = parseInt(value) || 0;
@@ -99,7 +103,7 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
         size="sm"
         type="button"
         onClick={handleClose}
-        className="w-30"
+        className="w-full sm:w-auto"
       >
         Cancel
       </CommonButton>
@@ -107,7 +111,7 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
         variant="primary"
         type="submit"
         size="sm"
-        className="w-30"
+        className="w-full sm:w-auto"
         disabled={!fromLocation || !toLocation}
       >
         Transfer
@@ -128,9 +132,9 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
       onSubmit={handleSubmit}
       dialogContentClassName="max-w-[95%] md:max-w-[90%] lg:max-w-[1000px]"
     >
-      <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+      <div className="p-3 sm:p-4 md:p-6 overflow-y-auto max-h-[calc(90vh-180px)] sm:max-h-[calc(90vh-200px)]">
         {/* Location Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-6 sm:mb-7 md:mb-8">
           {/* From location */}
           <div>
             <CommonSelectInput
@@ -147,14 +151,14 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
           </div>
 
           {/* Arrow */}
-          <div className="flex items-center justify-center">
-            <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center">
-              <ArrowRight className="w-6 h-6 text-blue-600" />
+          <div className="flex items-center justify-center order-3 md:order-2">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 rounded-full flex items-center justify-center rotate-90 md:rotate-0">
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
             </div>
           </div>
 
           {/* To location */}
-          <div>
+          <div className="order-2 md:order-3">
             <CommonSelectInput
               label="To Location"
               placeholder="Select location..."
@@ -170,7 +174,7 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
 
         {/* Medication Quantities Section */}
         {fromLocation && toLocation && availableMedications.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-7 md:mb-8">
             {/* Available Medications */}
             <div>
               <h4 className="font-medium text-gray-900 mb-4">
@@ -288,4 +292,3 @@ const InventoryTransferModal = (props: InventoryTransferModalProps) => {
 };
 
 export default InventoryTransferModal;
-

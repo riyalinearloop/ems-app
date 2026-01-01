@@ -94,14 +94,13 @@ const LoginContainer = () => {
       const payload: LoginPayload = {
         email: data.email,
         password: data.password,
-        isNarcoticsPortal: true
+        isNarcoticsPortal: true,
       };
 
       // Add reCAPTCHA token if available
       if (executeRecaptcha) {
         try {
           const gReCaptchaToken = await executeRecaptcha("LoginFormSubmit");
-          console.log("gReCaptchaToken", gReCaptchaToken);
           if (gReCaptchaToken) {
             payload.gReCaptchaToken = gReCaptchaToken;
           }
@@ -141,33 +140,83 @@ const LoginContainer = () => {
 
       // If login is successful with session
       if (loginResponse.session?.accessToken && loginResponse.user) {
-        // Fetch full user data
-        const userData = await getLoginUser({
-          Authorization: `Bearer ${loginResponse.session.accessToken}`,
-          org: loginResponse.user.orgId,
-        });
+        try {
+          // Fetch full user data
+          console.log("Fetching user data with whoAmI API...");
+          const userData = await getLoginUser({
+            Authorization: `Bearer ${loginResponse.session.accessToken}`,
+            org: loginResponse.user.orgId,
+          });
+          console.log("userData from whoAmI: ", userData);
 
-        // Set cookie
-        const authPayload: AuthPayload = {
-          user: {
-            id: userData.user?.id || loginResponse.user.id,
-            firstName: userData.user?.firstName || loginResponse.user.firstName,
-            lastName: userData.user?.lastName || loginResponse.user.lastName,
-            email: userData.user?.email || loginResponse.user.email,
-            phone: userData.user?.phone,
-            userType: userData.user?.userType || loginResponse.user.userType,
-          },
-          accessToken: loginResponse.session.accessToken,
-          session: loginResponse.session,
-          org: userData.user?.orgId || loginResponse.user.orgId,
-          customer: (userData as any).customer?.id,
-        };
+          if (!userData || (!userData.user && !userData.permissionGroup)) {
+            console.warn(
+              "whoAmI API returned incomplete data, using login response data"
+            );
+          }
 
-        await setAuthCookie(authPayload);
-        toast.success("Login successful!");
+          // Set cookie with complete user data
+          const authPayload: AuthPayload = {
+            user: {
+              id: userData?.user?.id || loginResponse.user.id,
+              firstName:
+                userData?.user?.firstName || loginResponse.user.firstName,
+              lastName: userData?.user?.lastName || loginResponse.user.lastName,
+              email: userData?.user?.email || loginResponse.user.email,
+              phone: userData?.user?.phone || loginResponse.user?.phone,
+              userType: userData?.user?.userType || loginResponse.user.userType,
+              permissionGroup: userData?.user?.permissionGroup ||
+                userData?.permissionGroup || {
+                  type:
+                    (
+                      userData?.user?.userType || loginResponse.user.userType
+                    )?.toLowerCase() === "paramedic"
+                      ? "paramedic"
+                      : "logistic",
+                },
+            },
+            accessToken: loginResponse.session.accessToken,
+            session: loginResponse.session,
+            org: userData?.user?.orgId || loginResponse.user.orgId,
+            customer: userData?.customer?.id || (userData as any)?.customer?.id,
+          };
 
-        // Redirect to dashboard
-        window.location.href = "/dashboard";
+          await setAuthCookie(authPayload);
+          toast.success("Login successful!");
+
+          // Redirect to dashboard
+          window.location.href = "/dashboard";
+        } catch (whoAmIError: any) {
+          console.error("Error fetching user data from whoAmI:", whoAmIError);
+          // Fallback: use login response data if whoAmI fails
+          const authPayload: AuthPayload = {
+            user: {
+              id: loginResponse.user.id,
+              firstName: loginResponse.user.firstName,
+              lastName: loginResponse.user.lastName,
+              email: loginResponse.user.email,
+              phone: loginResponse.user.phone,
+              userType: loginResponse.user.userType,
+              permissionGroup: loginResponse.user.permissionGroup ||
+                loginResponse.permissionGroup || {
+                  type:
+                    loginResponse.user.userType?.toLowerCase() === "paramedic"
+                      ? "paramedic"
+                      : "logistic",
+                },
+            },
+            accessToken: loginResponse.session.accessToken,
+            session: loginResponse.session,
+            org: loginResponse.user.orgId,
+            customer: (loginResponse as any).customer?.id,
+          };
+
+          await setAuthCookie(authPayload);
+          toast.warning(
+            "Login successful, but some user data could not be loaded."
+          );
+          window.location.href = "/dashboard";
+        }
       } else {
         setLoginError("Invalid response from server");
         setLoginLoading(false);
@@ -216,34 +265,89 @@ const LoginContainer = () => {
           if (res && res?.user && res?.session?.accessToken) {
             setIsVerificationLoading(false);
 
-            // Fetch full user data
-            const userData = await getLoginUser({
-              Authorization: `Bearer ${res?.session?.accessToken}`,
-              org: res?.user?.orgId,
-            });
+            try {
+              console.log(
+                "Fetching user data with whoAmI API after OTP verification..."
+              );
+              // Fetch full user data
+              const userData = await getLoginUser({
+                Authorization: `Bearer ${res?.session?.accessToken}`,
+                org: res?.user?.orgId,
+              });
+              console.log("userData from whoAmI: ", userData);
 
-            // Set cookie
-            const authPayload: AuthPayload = {
-              user: {
-                id: userData.user?.id || res?.user.id,
-                firstName: userData.user?.firstName || res?.user.firstName,
-                lastName: userData.user?.lastName || res?.user.lastName,
-                email: userData.user?.email || res?.user.email,
-                phone: userData.user?.phone,
-                userType: userData.user?.userType || res?.user.userType,
-              },
-              accessToken: res?.session?.accessToken,
-              session: res?.session,
-              org: userData.user?.orgId || res?.user.orgId,
-              customer: (userData as any).customer?.id,
-            };
+              if (!userData || (!userData.user && !userData.permissionGroup)) {
+                console.warn(
+                  "whoAmI API returned incomplete data, using OTP verification response data"
+                );
+              }
 
-            await setAuthCookie(authPayload);
-            toast.success("OTP verified successfully!");
-            setIsInvalidCode(false);
+              // Set cookie with complete user data
+              const authPayload: AuthPayload = {
+                user: {
+                  id: userData?.user?.id || res?.user.id,
+                  firstName: userData?.user?.firstName || res?.user.firstName,
+                  lastName: userData?.user?.lastName || res?.user.lastName,
+                  email: userData?.user?.email || res?.user.email,
+                  phone: userData?.user?.phone || res?.user.phone,
+                  userType: userData?.user?.userType || res?.user.userType,
+                  permissionGroup: userData?.user?.permissionGroup ||
+                    userData?.permissionGroup || {
+                      type:
+                        (
+                          userData?.user?.userType || res?.user.userType
+                        )?.toLowerCase() === "paramedic"
+                          ? "paramedic"
+                          : "logistic",
+                    },
+                },
+                accessToken: res?.session?.accessToken,
+                session: res?.session,
+                org: userData?.user?.orgId || res?.user.orgId,
+                customer: userData?.customer?.id,
+              };
 
-            // Redirect to dashboard
-            window.location.href = "/dashboard";
+              await setAuthCookie(authPayload);
+              toast.success("OTP verified successfully!");
+              setIsInvalidCode(false);
+
+              // Redirect to dashboard
+              window.location.href = "/dashboard";
+            } catch (whoAmIError: any) {
+              console.error(
+                "Error fetching user data from whoAmI:",
+                whoAmIError
+              );
+              // Fallback: use OTP verification response data if whoAmI fails
+              const authPayload: AuthPayload = {
+                user: {
+                  id: res.user.id,
+                  firstName: res.user.firstName,
+                  lastName: res.user.lastName,
+                  email: res.user.email,
+                  phone: res.user.phone,
+                  userType: res.user.userType,
+                  permissionGroup: res.user.permissionGroup ||
+                    res.permissionGroup || {
+                      type:
+                        res.user.userType?.toLowerCase() === "paramedic"
+                          ? "paramedic"
+                          : "logistic",
+                    },
+                },
+                accessToken: res.session.accessToken,
+                session: res.session,
+                org: res.user.orgId,
+                customer: (res as any).customer?.id,
+              };
+
+              await setAuthCookie(authPayload);
+              toast.warning(
+                "OTP verified, but some user data could not be loaded."
+              );
+              setIsInvalidCode(false);
+              window.location.href = "/dashboard";
+            }
           } else {
             setIsVerificationLoading(false);
             setIsInvalidCode(true);

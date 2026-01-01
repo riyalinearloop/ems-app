@@ -1,14 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from "@/components/ui/table";
+import { useEffect, useRef, useState } from "react";
 import { SquareChevronLeft, SquareChevronRight } from "lucide-react";
 import CommonButton from "./commonButton";
 
@@ -97,9 +89,9 @@ export function CommonTable({
   onPageChangePagination,
 }: CommonTableProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollable, setScrollable] = useState(false);
-  const [showLeftShadow, setShowLeftShadow] = useState(false);
-  const [showRightShadow, setShowRightShadow] = useState(false);
+  const [_scrollable, setScrollable] = useState(false);
+  const [_showLeftShadow, setShowLeftShadow] = useState(false);
+  const [_showRightShadow, setShowRightShadow] = useState(false);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;

@@ -1,150 +1,164 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Package,
   MapPin,
   Clock,
   CheckCircle2,
   ArrowDownCircle,
+  Plus,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import CommonButton from "@/components/custom-components/commonButton";
+import {
+  CommonTable,
+  ColumnType,
+} from "@/components/custom-components/commonTable";
 import type { Pouch } from "@/components/data/withdraw-pouch";
 
 interface WithdrawPouchSceneProps {
   pouches: Pouch[];
+  onOpenWithdrawModal?: () => void;
 }
 
-const WithdrawPouchScene = ({ pouches }: WithdrawPouchSceneProps) => {
-  const [selectedPouch, setSelectedPouch] = useState<string | null>(null);
+const WithdrawPouchScene = ({
+  pouches,
+  onOpenWithdrawModal,
+}: WithdrawPouchSceneProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(pouches.length / itemsPerPage);
+  const paginatedPouches = pouches.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-  const handleWithdraw = (pouchId: string) => {
-    setSelectedPouch(pouchId);
-    // TODO: Implement withdraw logic
-    console.log("Withdrawing pouch:", pouchId);
-  };
+  const columns: ColumnType[] = [
+    {
+      title: "Pouch Number",
+      dataIndex: "pouchNumber",
+      render: (value: string) => (
+        <span className="text-sm font-medium text-gray-900">{value}</span>
+      ),
+    },
+    {
+      title: "Type",
+      dataIndex: "pouchType",
+      render: (value: string) => (
+        <span className="text-sm text-gray-500 capitalize">
+          {value || "Standard"}
+        </span>
+      ),
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      render: (value: string) => (
+        <div className="flex items-center space-x-2">
+          <MapPin className="w-4 h-4 text-gray-400" />
+          <span className="text-sm text-gray-500">{value}</span>
+        </div>
+      ),
+    },
+    {
+      title: "Medications",
+      dataIndex: "medications",
+      render: (
+        medications: Array<{ name: string; quantity: number; dosage?: string }>
+      ) => (
+        <div className="flex flex-wrap gap-1">
+          {medications.map((med, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+            >
+              {med.name} {med.dosage || ""}: {med.quantity}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (value: string) => (
+        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">
+          <CheckCircle2 className="w-3 h-3 mr-1" />
+          {value}
+        </span>
+      ),
+    },
+    {
+      title: "Last Updated",
+      dataIndex: "lastUpdated",
+      render: (value: string) => (
+        <div className="flex items-center space-x-2">
+          <Clock className="w-4 h-4 text-gray-400" />
+          <span className="text-sm text-gray-500">{value}</span>
+        </div>
+      ),
+    },
+    {
+      title: "Actions",
+      dataIndex: "id",
+      render: (_value: string, _row: Pouch) => (
+        <CommonButton
+          variant="primary"
+          size="sm"
+          onClick={onOpenWithdrawModal}
+          className="flex items-center space-x-2"
+        >
+          <ArrowDownCircle className="w-4 h-4" />
+          <span>Withdraw</span>
+        </CommonButton>
+      ),
+    },
+  ];
 
   return (
-    <div>
-      {/* Header */}
-      <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <CardHeader className="border-b border-gray-200 p-4 md:p-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <CardTitle className="text-xl md:text-2xl font-bold text-gray-900 flex items-center">
-                <ArrowDownCircle className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-blue-600" />
-                Withdraw Pouch
-              </CardTitle>
-              <CardDescription className="text-sm md:text-base text-gray-600 mt-1">
-                Select and withdraw available medication pouches
-              </CardDescription>
-            </div>
+    <div className="space-y-6">
+      {/* Available Pouches Table */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Available Pouches
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Select and withdraw available medication pouches for field use
+            </p>
           </div>
-        </CardHeader>
-        <CardContent className="p-4 md:p-6">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Package className="w-4 h-4" />
-            <span className="font-medium">Available Pouches:</span>
-            <span>{pouches.length}</span>
+          <CommonButton
+            variant="primary"
+            size="default"
+            onClick={onOpenWithdrawModal}
+            className="flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Withdraw Pouch
+          </CommonButton>
+        </div>
+        {pouches.length === 0 ? (
+          <div className="p-12 text-center">
+            <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg font-medium">
+              No available pouches
+            </p>
+            <p className="text-gray-400 text-sm mt-2">
+              All pouches are currently signed out
+            </p>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Available Pouches Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {pouches.map((pouch) => (
-          <PouchCard
-            key={pouch.id}
-            pouch={pouch}
-            onWithdraw={handleWithdraw}
-            isWithdrawing={selectedPouch === pouch.id}
+        ) : (
+          <CommonTable
+            columns={columns}
+            data={paginatedPouches}
+            pagePagination={currentPage}
+            totalPagesPagination={totalPages}
+            onPageChangePagination={setCurrentPage}
           />
-        ))}
+        )}
       </div>
     </div>
-  );
-};
-
-interface PouchCardProps {
-  pouch: Pouch;
-  onWithdraw: (pouchId: string) => void;
-  isWithdrawing: boolean;
-}
-
-const PouchCard = ({ pouch, onWithdraw, isWithdrawing }: PouchCardProps) => {
-  return (
-    <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-      <CardHeader className="border-b border-gray-200 p-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold text-gray-900">
-            {pouch.pouchNumber}
-          </CardTitle>
-          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">
-            <CheckCircle2 className="w-3 h-3 mr-1" />
-            {pouch.status}
-          </span>
-        </div>
-      </CardHeader>
-      <CardContent className="p-4">
-        <div className="space-y-4">
-          {/* Location */}
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="w-4 h-4 text-gray-400" />
-            <span className="text-gray-600">
-              <span className="font-medium">Location:</span> {pouch.location}
-            </span>
-          </div>
-
-          {/* Medications */}
-          <div>
-            <p className="text-xs font-medium text-gray-500 mb-2">
-              Medications:
-            </p>
-            <div className="space-y-1">
-              {pouch.medications.map((med, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between text-sm bg-gray-50 p-2 rounded"
-                >
-                  <span className="text-gray-700">{med.name}</span>
-                  <span className="font-medium text-gray-900">
-                    Qty: {med.quantity}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Last Updated */}
-          <div className="flex items-center gap-2 text-xs text-gray-500 pt-2 border-t border-gray-200">
-            <Clock className="w-3 h-3" />
-            <span>Last updated: {pouch.lastUpdated}</span>
-          </div>
-
-          {/* Actions */}
-          <div className="pt-2">
-            <CommonButton
-              variant="primary"
-              size="sm"
-              className="w-full"
-              onClick={() => onWithdraw(pouch.id)}
-              loading={isWithdrawing}
-              loadingText="Withdrawing..."
-            >
-              <ArrowDownCircle className="w-4 h-4 mr-2" />
-              Withdraw Pouch
-            </CommonButton>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   );
 };
 

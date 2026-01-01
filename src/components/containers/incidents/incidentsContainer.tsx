@@ -67,4 +67,3 @@ const IncidentsContainer = () => {
 };
 
 export default IncidentsContainer;
-

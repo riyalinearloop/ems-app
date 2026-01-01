@@ -2,7 +2,7 @@
 
 import { CommonDialog } from "@/components/custom-components/commonDialog";
 import CommonButton from "@/components/custom-components/commonButton";
-import { Package, CheckCircle } from "lucide-react";
+import { Package } from "lucide-react";
 import type { Pouch } from "@/components/data/live-pouch-status";
 
 interface PouchDetailsModalProps {
@@ -45,7 +45,7 @@ const PouchDetailsModal = ({
         size="sm"
         type="button"
         onClick={handleExportDetails}
-        className="w-30 bg-gray-600 hover:bg-gray-700 text-white"
+        className="w-full sm:w-auto bg-gray-600 hover:bg-gray-700 text-white"
       >
         Export Details
       </CommonButton>
@@ -54,7 +54,7 @@ const PouchDetailsModal = ({
         size="sm"
         type="button"
         onClick={handleViewHistory}
-        className="w-30"
+        className="w-full sm:w-auto"
       >
         View History
       </CommonButton>
@@ -73,8 +73,8 @@ const PouchDetailsModal = ({
       footerActions={footerActions}
       dialogContentClassName="max-w-[95%] md:max-w-[90%] lg:max-w-[800px]"
     >
-      <div className="max-h-[75vh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="max-h-[70vh] sm:max-h-[75vh] overflow-y-auto px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-4 sm:mb-5 md:mb-6">
           {/* Status Information Section */}
           <div className="space-y-4">
             <h4 className="text-sm font-medium text-gray-700 mb-4">
@@ -184,7 +184,8 @@ const PouchDetailsModal = ({
                   </span>
                 </div>
                 <div className="text-sm font-semibold text-gray-900">
-                  {medication.quantity} {medication.quantity === 1 ? "unit" : "units"}
+                  {medication.quantity}{" "}
+                  {medication.quantity === 1 ? "unit" : "units"}
                 </div>
               </div>
             ))}
@@ -196,4 +197,3 @@ const PouchDetailsModal = ({
 };
 
 export default PouchDetailsModal;
-

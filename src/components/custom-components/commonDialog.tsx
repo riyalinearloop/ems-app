@@ -51,16 +51,18 @@ export function CommonDialog({
         <form onSubmit={onSubmit}>
           {/* ------------------- Dialog Main Container ------------------- */}
           <DialogContent
-            className={`gap-0 p-0 max-w-[95%] md:max-w-[95%] lg:max-w-[1200px] overflow-hidden max-h-[90vh] !border-0 ${dialogContentClassName}`}
+            className={`gap-0 p-0 max-w-[95%] sm:max-w-[90%] md:max-w-[85%] lg:max-w-[1200px] overflow-hidden max-h-[90vh] !border-0 flex flex-col ${dialogContentClassName}`}
             onInteractOutside={onInteractOutside}
           >
             {/* ------------------- DialogHeader ------------------- */}
-            <DialogHeader>
-              <div className="flex items-center justify-between gap-3 border-b border-input-border p-6">
-                <div>
-                  <DialogTitle className="text-left">{title}</DialogTitle>
+            <DialogHeader className="flex-shrink-0">
+              <div className="flex items-center justify-between gap-2 sm:gap-3 border-b border-input-border p-4 sm:p-5 md:p-6">
+                <div className="flex-1 min-w-0">
+                  <DialogTitle className="text-left text-base sm:text-lg md:text-xl truncate">
+                    {title}
+                  </DialogTitle>
                   {description && (
-                    <DialogDescription className="text-left">
+                    <DialogDescription className="text-left text-xs sm:text-sm mt-1">
                       {description}
                     </DialogDescription>
                   )}
@@ -69,20 +71,24 @@ export function CommonDialog({
             </DialogHeader>
 
             {/* ------------------- Dialog Children Content ------------------- */}
-            <div>{children}</div>
+            <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+              {children}
+            </div>
 
             {/* ------------------- Dialog Footer ------------------- */}
             {showFooter && (
-              <DialogFooter className="p-6 flex items-center justify-end gap-3 bg-white border-t border-input-border">
+              <DialogFooter className="p-4 sm:p-5 md:p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 bg-white border-t border-input-border">
                 {footerActions ? (
-                  footerActions
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+                    {footerActions}
+                  </div>
                 ) : (
                   <>
                     <DialogClose asChild>
                       <CommonButton
                         variant="light"
                         size="sm"
-                        className="w-[120px]"
+                        className="w-full sm:w-[120px]"
                       >
                         {dialogFooterCloseBtnText}
                       </CommonButton>
@@ -92,7 +98,7 @@ export function CommonDialog({
                       variant="light"
                       type="submit"
                       size="sm"
-                      className="w-[120px]"
+                      className="w-full sm:w-[120px]"
                     >
                       {dialogFooterSaveBtnText}
                     </CommonButton>

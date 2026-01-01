@@ -98,8 +98,15 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
     {
       title: "Status",
       dataIndex: "status",
-      render: (value: string, row: OrderHistoryRow) => {
+      render: (value: string, _row: OrderHistoryRow) => {
         const statusConfig = orderStatusConfig[value];
+        if (!statusConfig) {
+          return (
+            <span className="inline-flex items-center space-x-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">
+              {value}
+            </span>
+          );
+        }
         const StatusIcon = iconMap[statusConfig.icon];
         return (
           <span
@@ -153,14 +160,14 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
       {/* Header + primary action */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="text-left">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+      <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-left flex-1 min-w-0">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
             Order Management
           </h2>
-          <p className="text-sm md:text-base text-gray-600">
+          <p className="text-xs sm:text-sm md:text-base text-gray-600 mt-1">
             Manage medication orders and authorization requests
           </p>
         </div>
@@ -168,10 +175,10 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
         <CommonButton
           variant="primary"
           onClick={onOpenOrderModal}
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto flex items-center justify-center sm:justify-start"
         >
-          <Plus className="h-4 w-4 mr-2" />
-          New Order
+          <Plus className="h-4 w-4 mr-2 flex-shrink-0" />
+          <span className="whitespace-nowrap">New Order</span>
         </CommonButton>
       </div>
 
@@ -195,9 +202,9 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
       </Card> */}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-gray-200">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">
               Order History
             </h3>
           </div>
@@ -213,17 +220,17 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
 
       {/* Order status flow */}
       <Card className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <CardHeader className="border-b border-gray-200 p-4 md:p-6">
-          <CardTitle className="text-lg font-semibold text-gray-900">
+        <CardHeader className="border-b border-gray-200 p-4 sm:p-6">
+          <CardTitle className="text-base sm:text-lg font-semibold text-gray-900">
             Order Status Flow
           </CardTitle>
-          <CardDescription className="text-sm text-gray-600">
+          <CardDescription className="text-xs sm:text-sm text-gray-600">
             Track the progress of your orders through the system
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="p-4 md:p-6">
-          <div className="flex items-start justify-center overflow-x-auto pb-2">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-start justify-center overflow-x-auto pb-2 -mx-2 sm:mx-0 px-2 sm:px-0">
             {statusFlowSteps.flatMap((step, index) => {
               const StepIcon = iconMap[step.icon];
               const elements = [
@@ -233,7 +240,7 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
                   >
                     <StepIcon className="h-4 w-4" />
                   </div>
-                  <span className="mt-2 text-center text-xs font-medium text-gray-600 whitespace-nowrap">
+                  <span className="mt-2 text-center text-xs font-medium text-gray-600 whitespace-nowrap px-1">
                     {step.label}
                   </span>
                 </div>,
@@ -253,7 +260,6 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
           </div>
         </CardContent>
       </Card>
-
     </div>
   );
 };

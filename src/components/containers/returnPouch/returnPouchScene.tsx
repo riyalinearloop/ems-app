@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Package,
   User,
@@ -120,7 +120,7 @@ const ReturnPouchScene = ({ pouches }: ReturnPouchSceneProps) => {
     {
       title: "Actions",
       dataIndex: "id",
-      render: (value: string, row: ReturnPouch) => (
+      render: (_value: string, row: ReturnPouch) => (
         <div className="flex gap-2">
           {row.status === "Pending" && (
             <CommonButton variant="primary" size="sm">

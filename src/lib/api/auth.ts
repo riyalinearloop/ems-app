@@ -34,6 +34,11 @@ export interface LoginSuccessResponse {
   userHasOtpExt?: {
     otpExtensionToken: string;
   };
+  customer?: {
+    id: string;
+    [key: string]: any;
+  };
+  [key: string]: any;
 }
 
 export interface OtpVerificationPayload {
@@ -62,6 +67,66 @@ export const getLoginUser = async (
   params: GetLoginUserParams
 ): Promise<LoginSuccessResponse> => {
   const { Authorization, org, customer } = params;
+
+  // If called from client-side with Authorization header (during login), use external API
+  // Otherwise, if cookie exists, use Next.js API route
+  if (typeof window !== "undefined") {
+    // If we have Authorization header, use external API (during login flow)
+    if (Authorization && org) {
+      try {
+        const headers: Record<string, string> = {
+          Authorization,
+          org,
+        };
+
+        if (customer) {
+          headers.customer = customer;
+        }
+
+        console.log("Calling whoAmI API with headers:", {
+          Authorization: Authorization.substring(0, 20) + "...",
+          org,
+          customer,
+        });
+
+        const response = await fetch("/auth/whoAmI", {
+          method: "GET",
+          headers,
+        });
+
+        console.log("whoAmI API response received:", response);
+        return response;
+      } catch (error) {
+        console.error("Error calling whoAmI API during login:", error);
+        throw error;
+      }
+    }
+
+    // If no Authorization header, try Next.js API route (after login, when cookie exists)
+    try {
+      const response = await window.fetch("/api/auth/whoAmI", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error?.message || "Failed to get user info");
+      }
+
+      const data = await response.json();
+      console.log("whoAmI API route response:", data);
+      return data;
+    } catch (error) {
+      console.error("Error calling whoAmI API route:", error);
+      throw error;
+    }
+  }
+
+  // Server-side: use external API
   const headers: Record<string, string> = {
     Authorization,
     org,
@@ -71,10 +136,16 @@ export const getLoginUser = async (
     headers.customer = customer;
   }
 
-  return fetch("/auth/whoAmI", {
-    method: "GET",
-    headers,
-  });
+  try {
+    const response = await fetch("/auth/whoAmI", {
+      method: "GET",
+      headers,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error calling whoAmI API on server:", error);
+    throw error;
+  }
 };
 
 export const otpVerificationAPI = async (

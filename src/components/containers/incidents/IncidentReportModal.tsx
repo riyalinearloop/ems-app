@@ -5,7 +5,7 @@ import { CommonDialog } from "@/components/custom-components/commonDialog";
 import CommonButton from "@/components/custom-components/commonButton";
 import { CommonSelectInput } from "@/components/custom-components/commonSelectInput";
 import { Input } from "@/components/ui/input";
-import { Plus, Calendar, Clock } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Substance {
@@ -20,7 +20,7 @@ interface Substance {
 
 interface IncidentReportModalProps {
   isOpen: boolean;
-  onClose: (data?: any) => void;
+  onClose: (data?: unknown) => void;
   medications: Array<{ value: string; label: string }>;
   dosageTypes: Array<{ value: string; label: string }>;
   lossReasons: Array<{ value: string; label: string }>;
@@ -59,7 +59,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
   ]);
 
   // Handle form field changes
-  const handleFieldChange = (field: string, value: any) => {
+  const handleFieldChange = (field: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -67,7 +67,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
   const handleSubstanceChange = (
     id: string,
     field: keyof Substance,
-    value: any
+    value: unknown
   ) => {
     setSubstances((prev) =>
       prev.map((sub) => (sub.id === id ? { ...sub, [field]: value } : sub))
@@ -140,7 +140,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
         size="sm"
         type="button"
         onClick={handleClose}
-        className="w-30"
+        className="w-full sm:w-auto"
       >
         Cancel
       </CommonButton>
@@ -148,7 +148,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
         variant="primary"
         type="submit"
         size="sm"
-        className="w-30 bg-red-600 hover:bg-red-700"
+        className="w-full sm:w-auto bg-red-600 hover:bg-red-700"
       >
         Report Incident
       </CommonButton>
@@ -169,30 +169,33 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
       dialogContentClassName="max-w-[95%] md:max-w-[90%] lg:max-w-[900px]"
     >
       <form onSubmit={handleSubmit}>
-        <div className="max-h-[75vh] overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 space-y-6">
+        <div className="max-h-[70vh] sm:max-h-[75vh] overflow-y-auto px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 space-y-4 sm:space-y-5 md:space-y-6">
           {/* Incident Information Section */}
           <div>
-            <h4 className="text-base font-semibold text-gray-900 mb-4">
+            <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">
               Incident Information
             </h4>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Location */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location Where Loss Discovered <span className="text-red-500">*</span>
+                  Location Where Loss Discovered{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="text"
                   placeholder="e.g., 5040 Mainway, Burlington"
                   value={formData.location}
-                  onChange={(e) => handleFieldChange("location", e.target.value)}
+                  onChange={(e) =>
+                    handleFieldChange("location", e.target.value)
+                  }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
 
               {/* Date and Time Row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {/* Discovery Date */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -232,7 +235,8 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
               {/* Circumstances */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Circumstances of Discovery <span className="text-red-500">*</span>
+                  Circumstances of Discovery{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   placeholder="Describe how and when the loss was discovered, including any relevant circumstances..."
@@ -247,7 +251,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
               </div>
 
               {/* Witness Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Witness Name (if applicable)
@@ -314,21 +318,21 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
               </Button>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5 md:space-y-6">
               {substances.map((substance, index) => (
                 <div
                   key={substance.id}
-                  className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                  className="border border-gray-200 rounded-lg p-3 sm:p-4 bg-gray-50"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h5 className="text-sm font-semibold text-gray-900">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <h5 className="text-xs sm:text-sm font-semibold text-gray-900">
                       Substance #{index + 1}
                     </h5>
                     {substances.length > 1 && (
                       <Button
                         type="button"
                         onClick={() => handleRemoveSubstance(substance.id)}
-                        className="text-red-600 hover:text-red-700 text-sm"
+                        className="text-red-600 hover:text-red-700 text-xs sm:text-sm"
                         variant="ghost"
                       >
                         Remove
@@ -336,7 +340,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
                     )}
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {/* Medication */}
                     <CommonSelectInput
                       label={
@@ -354,7 +358,7 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
                     />
 
                     {/* Dosage Type and Quantity Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <CommonSelectInput
                         label={
                           <>
@@ -398,7 +402,8 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
                     <CommonSelectInput
                       label={
                         <>
-                          Reason for Loss <span className="text-red-500">*</span>
+                          Reason for Loss{" "}
+                          <span className="text-red-500">*</span>
                         </>
                       }
                       placeholder="Select reason..."
@@ -481,4 +486,3 @@ const IncidentReportModal = (props: IncidentReportModalProps) => {
 };
 
 export default IncidentReportModal;
-
